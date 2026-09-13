@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#141a23" />
+    <title>Obed Fermín // Control Operativo de Inventarios &amp; Analítica de Datos</title>
+    <meta
+      name="description"
+      content="Portafolio profesional — Control de inventarios, conciliación de compras y facturación (3-Way Match), analítica transaccional en SQL y tableros en Power BI."
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+              mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+            },
+            colors: {
+              dark: {
+                deep: '#141a23',
+                base: '#1a222e',
+                card: '#202b3b',
+                border: '#2c394b',
+              },
+              surface: {
+                canvas: '#f8fafc',
+                card: '#ffffff',
+                border: '#e2e8f0',
+                borderSoft: '#edf2f7',
+                muted: '#edf2f7',
+              },
+              content: {
+                title: '#0f172a',
+                body: '#334155',
+                muted: '#64748b',
+                dim: '#94a3b8',
+              },
+              copper: {
+                DEFAULT: '#d97706', // Cobre calibrado (menos estridente, más sofisticado)
+                hover: '#b45309',
+                soft: '#f59e0b',
+                subtle: '#fffbeb',
+                line: '#fde68a',
+              },
+              status: {
+                reconciled: '#059669',
+                variance: '#d97706',
+                unmatched: '#e11d48',
+                system: '#0284c7',
+              },
+            },
+            animation: {
+              marquee: 'marquee 32s linear infinite',
+            },
+            keyframes: {
+              marquee: {
+                '0%': { transform: 'translateX(0%)' },
+                '100%': { transform: 'translateX(-50%)' },
+              },
+            },
+          },
+        },
+      }
+    </script>
+
+    <style type="text/tailwindcss">
+      @layer base {
+        body {
+          background-color: #f8fafc;
+          color: #334155;
+          font-feature-settings: "cv11", "ss01";
+        }
+        ::selection {
+          background-color: rgba(217, 119, 6, 0.25);
+          color: #0f172a;
+        }
+        :focus-visible {
+          outline: 2px solid #d97706;
+          outline-offset: 2px;
+        }
+      }
+      @layer utilities {
+        .tnum {
+          font-variant-numeric: tabular-nums;
+        }
+        .grid-etch {
+          background-image:
+            linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+          background-size: 36px 36px;
+        }
+        .timeline-gradient-bar {
+          background: linear-gradient(
+            to bottom,
+            #d97706 0%,
+            #f59e0b 80%,
+            rgba(245, 158, 11, 0.2) 100%
+          );
+          box-shadow: 0 0 10px rgba(217, 119, 6, 0.3);
+        }
+      }
+    </style>
+  </head>
+
+  <body class="font-sans antialiased text-content-body">
+    <div id="top" class="min-h-screen">
+      
+      <!-- ===================== NAVBAR ===================== -->
+      <div class="fixed top-4 inset-x-0 z-50 flex justify-center px-4">
+        <header class="w-full max-w-5xl rounded-full border border-dark-border/80 bg-dark-base/90 px-4 py-2.5 shadow-xl backdrop-blur-xl sm:px-6">
+          <div class="flex items-center justify-between">
+            <a href="#top" class="flex items-center gap-2.5 font-mono text-[13px] font-semibold tracking-tight transition-opacity hover:opacity-80">
+              <span class="inline-block h-2.5 w-2.5 rounded-full bg-copper shadow-sm shadow-copper/60" aria-hidden="true"></span>
+              <span class="text-white tracking-normal">obedfermin</span>
+            </a>
+
+            <nav aria-label="Navegación principal" class="hidden flex-1 items-center justify-center gap-8 md:flex">
+              <a href="#posicionamiento" class="text-[13px] font-medium text-slate-300 transition-colors hover:text-white">Perfil</a>
+              <a href="#caso-estudio" class="text-[13px] font-medium text-slate-300 transition-colors hover:text-white">Caso de estudio</a>
+              <a href="#credenciales" class="text-[13px] font-medium text-slate-300 transition-colors hover:text-white">Credenciales</a>
+              <a href="#trayectoria" class="text-[13px] font-medium text-slate-300 transition-colors hover:text-white">Trayectoria</a>
+            </nav>
+
+            <div class="flex items-center gap-5">
+              <a
+                href="https://github.com/ObedFermin/MiningMRO_Engine"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="hidden text-slate-300 transition-colors hover:text-white sm:inline-flex items-center justify-center p-1"
+                aria-label="Ver código en GitHub"
+              >
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.25.45-2.28 1.19-3.08-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.08 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.06.78 2.14 0 1.55-.01 2.8-.01 3.18 0 .31.21.68.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5Z"/></svg>
+              </a>
+              <a
+                href="#contacto"
+                class="rounded-full bg-white px-4 py-1.5 text-xs font-semibold text-dark-deep transition-all hover:bg-slate-100 shadow-sm"
+              >
+                Contacto
+              </a>
+              <button
+                type="button"
+                id="menu-toggle"
+                class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-dark-border text-slate-300 md:hidden"
+                aria-label="Abrir menú"
+              >
+                <svg id="icon-menu" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+                <svg id="icon-close" class="hidden h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Menú Móvil -->
+          <nav id="mobile-nav" class="hidden border-t border-dark-border/70 pt-4 mt-3 md:hidden">
+            <ul class="flex flex-col gap-2">
+              <li><a href="#posicionamiento" class="mobile-link block rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-dark-card hover:text-white">Perfil</a></li>
+              <li><a href="#caso-estudio" class="mobile-link block rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-dark-card hover:text-white">Caso de Estudio</a></li>
+              <li><a href="#credenciales" class="mobile-link block rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-dark-card hover:text-white">Credenciales</a></li>
+              <li><a href="#trayectoria" class="mobile-link block rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-dark-card hover:text-white">Trayectoria</a></li>
+            </ul>
+          </nav>
+        </header>
+      </div>
+
+      <!-- ===================== HERO SECTION ===================== -->
+      <section class="relative overflow-hidden bg-dark-deep border-b border-dark-border/60 pt-32 pb-16 sm:pt-36 sm:pb-20">
+        <div class="grid-etch pointer-events-none absolute inset-0 opacity-20" aria-hidden="true"></div>
+        <div class="pointer-events-none absolute -top-40 left-1/2 h-96 w-[42rem] -translate-x-1/2 rounded-full bg-copper/10 blur-[140px]" aria-hidden="true"></div>
+
+        <div class="relative mx-auto max-w-5xl px-5 sm:px-8">
+          <p class="font-mono text-[12px] font-semibold uppercase tracking-[0.25em] text-copper-soft">
+            — GESTIÓN DE INVENTARIOS · CONTROL OPERATIVO · ANÁLISIS DE DATOS
+          </p>
+
+          <h1 class="mt-6 text-balance text-4xl font-extrabold leading-[1.12] tracking-tight text-white sm:text-5xl lg:text-6xl">
+            Protejo el flujo de caja donde ocurren las pérdidas: <span class="text-copper-soft">entre la bodega y la factura</span><span class="text-white">.</span>
+          </h1>
+
+          <p class="mt-8 max-w-3xl text-pretty text-base leading-relaxed text-slate-300 sm:text-lg">
+            Articulo el trabajo de bodega con el análisis de datos para el control de costos. Con experiencia práctica en recepción, almacenamiento y despacho de materiales, utilizo <span class="text-white font-medium">SAP</span>, <span class="text-white font-medium">SQL</span> y <span class="text-white font-medium">Power BI</span> para conciliar discrepancias de inventario frente a compras, detectar sobrecostos y asegurar que los registros del sistema reflejen con exactitud lo que realmente existe en estantería.
+          </p>
+
+          <div class="mt-10 flex flex-wrap items-center gap-4">
+            <a href="#caso-estudio" class="inline-flex items-center gap-2 rounded-full bg-copper px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:bg-copper-hover hover:scale-[1.02] shadow-md shadow-copper/20">
+              Explorar caso de estudio
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+            <a 
+              href="https://drive.google.com/file/d/1Ngp8hCpMX75NDMrgw81bpa2HVXXaOYij/preview" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-dark-base hover:bg-dark-card text-slate-200 border border-dark-border font-medium text-sm transition-all duration-300 shadow-sm"
+            >
+              <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+              <span>Ver CV (PDF)</span>
+            </a>
+          </div>
+
+          <div class="mt-14 flex flex-wrap items-center gap-y-2 gap-x-6 text-xs text-slate-400 font-mono border-t border-dark-border/60 pt-6">
+            <span class="flex items-center gap-2 text-slate-300">
+              <span class="h-2 w-2 rounded-full bg-status-reconciled"></span>
+              Santiago, Chile
+            </span>
+            <span>· Operaciones & Abastecimiento</span>
+            <span>· Análisis respaldado con datos verificables</span>
+          </div>
+
+          <div class="mt-8 flex justify-center">
+            <a href="#posicionamiento" class="inline-flex items-center gap-2 text-[11px] font-mono uppercase tracking-widest text-slate-400 hover:text-copper-soft transition-colors">
+              <span>SCROLL</span>
+              <svg class="h-3.5 w-3.5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== MARQUEE TICKER ===================== -->
+      <div class="relative w-full overflow-hidden border-y border-surface-border bg-surface-muted py-3 select-none shadow-sm">
+        <div class="flex w-[200%] animate-marquee">
+          <div class="flex items-center gap-8 px-4 text-xs font-mono font-medium tracking-wider text-content-body">
+            <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-copper"></span>SAP MM / WMS</span>
+            <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-copper"></span>SQL Server (T-SQL)</span>
+            <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-copper"></span>Reconciliación 3-Way Match</span>
+            <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-copper"></span>Power BI (Estándar IBCS)</span>
+            <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-copper"></span>Trazabilidad Física &amp; Bodega</span>
+            <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-copper"></span>Auditoría Debe/Haber (shkzg)</span>
+            <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-copper"></span>Control de Mermas &amp; CECO</span>
+            <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-copper"></span>Stock Crítico MRO</span>
+          </div>
+          <div class="flex items-center gap-8 px-4 text-xs font-mono font-medium tracking-wider text-content-body" aria-hidden="true">
+            <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-copper"></span>SAP MM / WMS</span>
+            <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-copper"></span>SQL Server (T-SQL)</span>
+            <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-copper"></span>Reconciliación 3-Way Match</span>
+            <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-copper"></span>Power BI (Estándar IBCS)</span>
+            <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-copper"></span>Trazabilidad Física &amp; Bodega</span>
+            <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-copper"></span>Auditoría Debe/Haber (shkzg)</span>
+            <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-copper"></span>Control de Mermas &amp; CECO</span>
+            <span class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full bg-copper"></span>Stock Crítico MRO</span>
+          </div>
+        </div>
+      </div>
+
+      <main class="bg-surface-canvas">
+        
+        <!-- ===================== POSICIONAMIENTO / PILARES ===================== -->
+        <section id="posicionamiento" class="border-b border-surface-border bg-surface-canvas py-20 sm:py-24">
+          <div class="mx-auto max-w-5xl px-5 sm:px-8">
+            <p class="font-mono text-[12px] font-semibold uppercase tracking-[0.2em] text-copper">— Posicionamiento</p>
+            <h2 class="mt-3 text-3xl font-bold tracking-tight text-content-title sm:text-4xl">
+              El punto de encuentro entre la operación logística, el control de inventarios y el rigor financiero.
+            </h2>
+
+            <div class="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2">
+              <div class="group flex flex-col items-center justify-center rounded-2xl border border-surface-border bg-surface-card p-8 text-center sm:p-10 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-copper/50 hover:shadow-xl">
+                <div class="relative flex h-24 w-24 items-center justify-center rounded-full border border-surface-border bg-surface-muted p-1 transition-transform duration-300 group-hover:scale-105">
+                  <div class="flex h-full w-full items-center justify-center rounded-full bg-dark-deep text-xl font-bold font-mono text-white tracking-tight">
+                    OF
+                  </div>
+                </div>
+                <h3 class="mt-5 text-xl font-bold text-content-title">Obed Fermín</h3>
+                <p class="mt-1 text-sm font-medium text-content-body">Control de Inventarios &amp; Gestión Operativa</p>
+                <p class="mt-1 font-mono text-xs text-content-muted">Santiago, Chile · Enfoque Logístico y Datos</p>
+              </div>
+
+              <div class="group relative flex flex-col justify-center rounded-2xl border border-surface-border bg-surface-card p-8 sm:p-10 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-copper/50 hover:shadow-xl">
+                <span class="font-mono text-[11px] font-semibold uppercase tracking-wider text-copper">ENFOQUE OPERACIONAL</span>
+                <p class="mt-3 text-[15px] leading-relaxed text-content-body sm:text-base">
+                  Unifico el trabajo diario de bodega con el análisis en SQL y Power BI. Mi labor consiste en resolver las discrepancias entre lo que ingresa físicamente a estantería, las órdenes de compra y la facturación, asegurando inventarios confiables y evitando sobrecostos por descontrol administrativo.
+                </p>
+              </div>
+            </div>
+
+            <div class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              <div class="group rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-copper/50 hover:shadow-md">
+                <span class="block h-1.5 w-7 bg-copper rounded-full mb-4 transition-all duration-300 group-hover:w-10"></span>
+                <h4 class="text-sm font-bold text-content-title">Control &amp; Trazabilidad de Stock</h4>
+                <p class="mt-2 text-xs leading-relaxed text-content-muted">Conciliación estricta entre recepción física, guías de despacho y facturación comercial para erradicar discrepancias operativas.</p>
+              </div>
+              <div class="group rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-status-system/50 hover:shadow-md">
+                <span class="block h-1.5 w-7 bg-status-system rounded-full mb-4 transition-all duration-300 group-hover:w-10"></span>
+                <h4 class="text-sm font-bold text-content-title">Auditoría Transaccional en SQL</h4>
+                <p class="mt-2 text-xs leading-relaxed text-content-muted">Extracción y modelado relacional directo para auditar volúmenes masivos de movimientos y detectar sobreprecios frente a contrato marco.</p>
+              </div>
+              <div class="group rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-status-reconciled/50 hover:shadow-md">
+                <span class="block h-1.5 w-7 bg-status-reconciled rounded-full mb-4 transition-all duration-300 group-hover:w-10"></span>
+                <h4 class="text-sm font-bold text-content-title">Operación Logística &amp; Repuestos</h4>
+                <p class="mt-2 text-xs leading-relaxed text-content-muted">Manejo en terreno de catálogos técnicos, rotación de componentes críticos y preparación de despachos para servicio técnico y faena.</p>
+              </div>
+              <div class="group rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-content-dim/50 hover:shadow-md">
+                <span class="block h-1.5 w-7 bg-content-dim rounded-full mb-4 transition-all duration-300 group-hover:w-10"></span>
+                <h4 class="text-sm font-bold text-content-title">Visibilidad en Power BI</h4>
+                <p class="mt-2 text-xs leading-relaxed text-content-muted">Tableros sobrios bajo estándar IBCS enfocados en desvíos de presupuesto, variación de precios y días de inventario sin rotación.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================== CASO DE ESTUDIO ===================== -->
+        <section id="caso-estudio" class="border-b border-surface-border bg-surface-muted/60 py-20 sm:py-28">
+          <div class="mx-auto max-w-5xl px-5 sm:px-8">
+            <h2 class="text-3xl font-bold tracking-tight text-content-title sm:text-4xl">Caso de estudio</h2>
+            <p class="mt-3 max-w-2xl text-sm text-content-muted">
+              Auditoría operativa y conciliación transaccional: control de abastecimiento, contratos comerciales y saneamiento de inventarios mediante modelado en base de datos.
+            </p>
+
+            <div class="mt-16 relative">
+              <span class="pointer-events-none absolute -top-10 -left-6 font-mono text-8xl font-bold text-slate-200/70 select-none">01</span>
+              
+              <div class="relative grid grid-cols-1 gap-10 lg:grid-cols-12 items-start">
+                
+                <div class="group lg:col-span-6 overflow-hidden rounded-2xl border border-dark-border bg-dark-card shadow-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
+                  <div class="flex items-center justify-between border-b border-dark-border bg-dark-deep px-4 py-3">
+                    <div class="flex items-center gap-2">
+                      <span class="h-2.5 w-2.5 rounded-full bg-status-unmatched"></span>
+                      <span class="h-2.5 w-2.5 rounded-full bg-copper-soft"></span>
+                      <span class="h-2.5 w-2.5 rounded-full bg-status-reconciled"></span>
+                      <span class="ml-2 font-mono text-[11px] text-slate-400">auditoria_operacional_mro.sql</span>
+                    </div>
+                    <span class="rounded bg-dark-base px-2 py-0.5 font-mono text-[10px] text-slate-300 border border-dark-border">SQL + POWER BI</span>
+                  </div>
+
+                  <div class="p-4 sm:p-5 font-mono text-[11px]">
+                    <div class="mb-3 flex justify-between items-center text-slate-400 border-b border-dark-border/80 pb-2 text-[10px] uppercase tracking-wider">
+                      <span>Repuesto Crítico</span>
+                      <span class="text-right">Sobreprecio</span>
+                      <span class="text-right">Monto Total</span>
+                    </div>
+
+                    <div class="space-y-2">
+                      <div class="flex justify-between items-center text-slate-200 p-2 rounded-lg transition-colors duration-200 hover:bg-dark-base">
+                        <div>
+                          <span class="block text-white font-sans font-medium">Bomba Liebherr R9800</span>
+                          <span class="text-[10px] text-slate-400">LIEB-BOMB-R9800</span>
+                        </div>
+                        <span class="text-status-unmatched font-semibold tnum">$3,147,802.78</span>
+                        <span class="text-white tnum">$6,909,802.78</span>
+                      </div>
+
+                      <div class="flex justify-between items-center text-slate-200 p-2 rounded-lg transition-colors duration-200 hover:bg-dark-base">
+                        <div>
+                          <span class="block text-white font-sans font-medium">Cilindro Pala CAT 7495</span>
+                          <span class="text-[10px] text-slate-400">PALA-CYL-CAT7495</span>
+                        </div>
+                        <span class="text-status-unmatched font-semibold tnum">$2,845,122.50</span>
+                        <span class="text-white tnum">$13,240,122.50</span>
+                      </div>
+
+                      <div class="flex justify-between items-center text-slate-200 p-2 rounded-lg transition-colors duration-200 hover:bg-dark-base">
+                        <div>
+                          <span class="block text-white font-sans font-medium">Placa Blindaje Molino SAG</span>
+                          <span class="text-[10px] text-slate-400">MOLINO-REV-SAG</span>
+                        </div>
+                        <span class="text-copper-soft font-semibold tnum">$1,361,150.15</span>
+                        <span class="text-white tnum">$6,401,150.15</span>
+                      </div>
+                    </div>
+
+                    <div class="mt-5 rounded-lg border border-dark-border bg-dark-deep p-3 text-center">
+                      <p class="font-sans text-xs text-slate-300">
+                        <strong class="text-copper-soft">Concentración de Riesgo (Pareto):</strong> El 74.5% de los sobrecostos se concentran en solo 3 componentes críticos de faena.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="lg:col-span-6 flex flex-col justify-start">
+                  <span class="font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-copper">
+                    ANALISTA DE OPERACIONES &amp; ABASTECIMIENTO
+                  </span>
+                  <h3 class="mt-2 text-2xl font-bold text-content-title sm:text-3xl">
+                    Mining MRO Analytics Platform
+                  </h3>
+                  <p class="mt-1 text-sm font-medium text-content-muted">
+                    Sistema de Reconciliación Transaccional MRO, Detección de Fuga de Margen y Control de Stock Crítico
+                  </p>
+
+                  <div class="mt-6 space-y-4 text-xs leading-relaxed text-content-body sm:text-[13px]">
+                    <div>
+                      <strong class="font-mono uppercase tracking-wider text-content-title block text-[11px]">El Problema Operacional</strong>
+                      <p class="mt-1">
+                        Contener la fuga de presupuesto y evitar paradas de flotas mineras pesadas provocadas por compras fuera de contrato marco y repuestos inmovilizados en control de calidad.
+                      </p>
+                    </div>
+
+                    <div>
+                      <strong class="font-mono uppercase tracking-wider text-content-title block text-[11px]">Metodología Técnica</strong>
+                      <p class="mt-1">
+                        Arquitectura relacional en SQL Server (T-SQL) con lógica de 3-Way Match ponderado. Neteo estricto de movimientos de bodega frente a facturación real (cargos, abonos y notas de crédito con shkzg), aislamiento Snapshot (RCSI) para alta concurrencia y validación de integridad mediante Test Harness unitario en memoria.
+                      </p>
+                    </div>
+
+                    <div>
+                      <strong class="font-mono uppercase tracking-wider text-content-title block text-[11px]">Impacto Obtenido</strong>
+                      <p class="mt-1">
+                        Auditoría integral sobre $39.39M USD en transacciones, aislando $9.87M USD en sobrecostos no autorizados y $3.46M USD en inventario inmovilizado en control de calidad (SPEME). Implementación de tablero ejecutivo en Power BI bajo norma IBCS para monitoreo de desvíos y gestión preventiva de contratos.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="mt-6 flex flex-wrap gap-2">
+                    <span class="rounded-md border border-surface-border bg-surface-card px-3 py-1.5 font-mono text-[11px] text-content-muted transition-all duration-300 hover:-translate-y-0.5 hover:border-copper hover:text-content-title hover:shadow-sm">SAP / WMS</span>
+                    <span class="rounded-md border border-surface-border bg-surface-card px-3 py-1.5 font-mono text-[11px] text-content-muted transition-all duration-300 hover:-translate-y-0.5 hover:border-copper hover:text-content-title hover:shadow-sm">SQL Server</span>
+                    <span class="rounded-md border border-surface-border bg-surface-card px-3 py-1.5 font-mono text-[11px] text-content-muted transition-all duration-300 hover:-translate-y-0.5 hover:border-copper hover:text-content-title hover:shadow-sm">Control de Inventario</span>
+                    <span class="rounded-md border border-surface-border bg-surface-card px-3 py-1.5 font-mono text-[11px] text-content-muted transition-all duration-300 hover:-translate-y-0.5 hover:border-copper hover:text-content-title hover:shadow-sm">Power BI</span>
+                    <span class="rounded-md border border-surface-border bg-surface-card px-3 py-1.5 font-mono text-[11px] text-content-muted transition-all duration-300 hover:-translate-y-0.5 hover:border-copper hover:text-content-title hover:shadow-sm">MRO Minero</span>
+                  </div>
+
+                  <div class="mt-8 flex flex-wrap items-center gap-6 border-t border-surface-border pt-5">
+                    <a
+                      href="https://github.com/ObedFermin/MiningMRO_Engine"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="inline-flex items-center gap-1.5 text-xs font-semibold text-copper hover:underline"
+                    >
+                      Repositorio y Arquitectura T-SQL ↗
+                    </a>
+                    <a
+                      href="https://github.com/ObedFermin/MiningMRO_Engine/blob/main/reports/Mro_mining.pdf"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="inline-flex items-center gap-1.5 text-xs font-semibold text-copper hover:underline"
+                    >
+                      Memoria Técnica y Tablero Ejecutivo (PDF) ↗
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================== HABILIDADES Y HERRAMIENTAS ===================== -->
+        <section id="stack" class="border-b border-surface-border bg-surface-canvas py-20 sm:py-24">
+          <div class="mx-auto max-w-5xl px-5 sm:px-8">
+            <p class="font-mono text-[12px] font-semibold uppercase tracking-[0.2em] text-copper">— Stack</p>
+            <h2 class="mt-3 text-3xl font-bold tracking-tight text-content-title sm:text-4xl">Habilidades y herramientas</h2>
+            
+            <div class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2">
+              
+              <!-- 01 / ERP & OPERACIONES LOGÍSTICAS -->
+              <div class="group rounded-xl border border-surface-border bg-surface-card p-6 sm:p-7 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-copper/50 hover:shadow-xl">
+                <span class="font-mono text-[11px] font-semibold uppercase tracking-wider text-copper">01 / ERP &amp; OPERACIONES LOGÍSTICAS</span>
+                <h3 class="mt-2 text-base font-bold text-content-title">Control de Inventarios &amp; Almacenamiento</h3>
+                <div class="mt-5 flex flex-wrap gap-2.5">
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-white hover:text-content-title">SAP MM / ERP</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-white hover:text-content-title">Recepción &amp; Despacho</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-white hover:text-content-title">Trazabilidad de Stock</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-white hover:text-content-title">Discrepancias Físico vs. Sistema</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-white hover:text-content-title">Gestión SPEME (Calidad)</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-white hover:text-content-title">Toma de Inventarios Cíclicos</span>
+                </div>
+              </div>
+
+              <!-- 02 / INGENIERÍA DE DATOS -->
+              <div class="group rounded-xl border border-surface-border bg-surface-card p-6 sm:p-7 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-status-system/50 hover:shadow-xl">
+                <span class="font-mono text-[11px] font-semibold uppercase tracking-wider text-status-system">02 / INGENIERÍA DE DATOS</span>
+                <h3 class="mt-2 text-base font-bold text-content-title">Auditoría SQL &amp; Arquitectura Relacional</h3>
+                <div class="mt-5 flex flex-wrap gap-2.5">
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-system/60 hover:bg-white hover:text-content-title">SQL Server 2022</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-system/60 hover:bg-white hover:text-content-title">T-SQL Avanzado</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-system/60 hover:bg-white hover:text-content-title">Índices de Cobertura</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-system/60 hover:bg-white hover:text-content-title">Neteo Debe/Haber (shkzg)</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-system/60 hover:bg-white hover:text-content-title">Concurrencia RCSI</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-system/60 hover:bg-white hover:text-content-title">Test Harness Unitario</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-system/60 hover:bg-white hover:text-content-title">Modelado DDL/CTEs</span>
+                </div>
+              </div>
+
+              <!-- 03 / BUSINESS INTELLIGENCE -->
+              <div class="group rounded-xl border border-surface-border bg-surface-card p-6 sm:p-7 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-status-reconciled/50 hover:shadow-xl">
+                <span class="font-mono text-[11px] font-semibold uppercase tracking-wider text-status-reconciled">03 / BUSINESS INTELLIGENCE</span>
+                <h3 class="mt-2 text-base font-bold text-content-title">Reportería Operativa &amp; Estándar Visual</h3>
+                <div class="mt-5 flex flex-wrap gap-2.5">
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-reconciled/60 hover:bg-white hover:text-content-title">Power BI Desktop</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-reconciled/60 hover:bg-white hover:text-content-title">Modelado Estrella / Dimensional</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-reconciled/60 hover:bg-white hover:text-content-title">Medidas DAX Avanzadas</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-reconciled/60 hover:bg-white hover:text-content-title">Normativa IBCS</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-reconciled/60 hover:bg-white hover:text-content-title">Report Page Tooltips</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-reconciled/60 hover:bg-white hover:text-content-title">Control de Variaciones de Costo</span>
+                </div>
+              </div>
+
+              <!-- 04 / CONTROL OPERACIONAL -->
+              <div class="group rounded-xl border border-surface-border bg-surface-card p-6 sm:p-7 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-copper/50 hover:shadow-xl">
+                <span class="font-mono text-[11px] font-semibold uppercase tracking-wider text-copper">04 / CONTROL OPERACIONAL</span>
+                <h3 class="mt-2 text-base font-bold text-content-title">Gestión de Compras &amp; Cadena de Suministro</h3>
+                <div class="mt-5 flex flex-wrap gap-2.5">
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-white hover:text-content-title">Reconciliación 3-Way Match</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-white hover:text-content-title">Detección de Desvíos de Precio</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-white hover:text-content-title">Control de Stock Inmovilizado</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-white hover:text-content-title">Auditoría de Recepciones vs. OC</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-white hover:text-content-title">Logística Inversa &amp; Devoluciones</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-white hover:text-content-title">Saneamiento de Catálogos</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================== CREDENCIALES ===================== -->
+        <section id="credenciales" class="border-b border-surface-border bg-surface-muted/50 py-20 sm:py-24">
+          <div class="mx-auto max-w-5xl px-5 sm:px-8">
+            <p class="font-mono text-[12px] font-semibold uppercase tracking-[0.2em] text-copper">— Formación &amp; Validación</p>
+            <h2 class="mt-3 text-3xl font-bold tracking-tight text-content-title sm:text-4xl">Credenciales y Certificaciones</h2>
+            <p class="mt-2 text-sm text-content-muted">
+              Certificaciones técnicas verificables en análisis de datos y control operacional emitidas por Google.
+            </p>
+
+            <div class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-3">
+              <!-- Tarjeta 1: Google BI -->
+              <div class="group flex flex-col justify-between rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-copper/60 hover:shadow-xl">
+                <div>
+                  <div class="flex h-36 items-center justify-center rounded-xl bg-white p-4 transition-transform duration-300 group-hover:scale-105">
+                    <img
+                      src="https://images.credly.com/size/340x340/images/664ba042-e31c-4e1f-8aea-4fc3917774ff/blob"
+                      alt="Google Business Intelligence Professional Badge"
+                      class="h-28 w-auto mx-auto object-contain"
+                      loading="lazy"
+                    />
+                  </div>
+                  <h4 class="mt-5 text-sm font-bold text-content-title">Google Business Intelligence Professional</h4>
+                  <p class="mt-1 text-xs font-mono text-content-dim">Google · 2026</p>
+                </div>
+                <a
+                  href="https://www.credly.com/badges/18d8ab98-5a76-4a11-a1d5-aac96261d460"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="mt-6 inline-flex items-center gap-1 font-mono text-[11px] font-semibold uppercase tracking-wider text-copper hover:text-copper-hover"
+                >
+                  VERIFICAR EN CREDLY ↗
+                </a>
+              </div>
+
+              <!-- Tarjeta 2: Google Data Analytics -->
+              <div class="group flex flex-col justify-between rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-copper/60 hover:shadow-xl">
+                <div>
+                  <div class="flex h-36 items-center justify-center rounded-xl bg-white p-4 transition-transform duration-300 group-hover:scale-105">
+                    <img
+                      src="https://images.credly.com/size/340x340/images/d4185c81-d7ad-4220-bf32-46168be588bc/blob"
+                      alt="Google Data Analytics Professional Badge"
+                      class="h-28 w-auto mx-auto object-contain"
+                      loading="lazy"
+                    />
+                  </div>
+                  <h4 class="mt-5 text-sm font-bold text-content-title">Google Data Analytics Professional</h4>
+                  <p class="mt-1 text-xs font-mono text-content-dim">Google · 2026</p>
+                </div>
+                <a
+                  href="https://www.credly.com/badges/7fb8fe0d-4bb0-4e42-a40b-e21a510307a7"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="mt-6 inline-flex items-center gap-1 font-mono text-[11px] font-semibold uppercase tracking-wider text-copper hover:text-copper-hover"
+                >
+                  VERIFICAR EN CREDLY ↗
+                </a>
+              </div>
+
+              <!-- Tarjeta 3: Google AI Essentials -->
+              <div class="group flex flex-col justify-between rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-copper/60 hover:shadow-xl">
+                <div>
+                  <div class="flex h-36 items-center justify-center rounded-xl bg-white p-4 transition-transform duration-300 group-hover:scale-105">
+                    <img
+                      src="https://images.credly.com/size/340x340/images/ea3eec65-ddad-4242-9c59-1defac0fa2d9/image.png"
+                      alt="Google AI Essentials Badge"
+                      class="h-28 w-auto mx-auto object-contain"
+                      loading="lazy"
+                    />
+                  </div>
+                  <h4 class="mt-5 text-sm font-bold text-content-title">Google AI Essentials</h4>
+                  <p class="mt-1 text-xs font-mono text-content-dim">Google · 2026</p>
+                </div>
+                <a
+                  href="https://www.credly.com/badges/9f20b6d3-710d-449f-9efa-faad1b1fda69"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="mt-6 inline-flex items-center gap-1 font-mono text-[11px] font-semibold uppercase tracking-wider text-copper hover:text-copper-hover"
+                >
+                  VERIFICAR EN CREDLY ↗
+                </a>
+              </div>
+            </div>
+
+            <!-- Tabla de Trazabilidad -->
+            <div class="mt-12 overflow-hidden rounded-xl border border-surface-border bg-surface-card shadow-sm">
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr class="border-b border-surface-border bg-surface-muted font-mono text-[10px] uppercase tracking-wider text-content-muted">
+                      <th class="px-6 py-4 font-semibold">Certificación / Validación</th>
+                      <th class="px-6 py-4 font-semibold">Institución / Origen</th>
+                      <th class="px-6 py-4 font-semibold">Habilidad Validada en Operaciones</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-surface-border text-content-body">
+                    <tr class="transition-colors hover:bg-surface-muted/60">
+                      <td class="px-6 py-4 font-bold text-content-title">Google Business Intelligence</td>
+                      <td class="px-6 py-4 font-mono text-content-muted">Google (Credly)</td>
+                      <td class="px-6 py-4">Modelado semántico dimensional, métricas DAX para control de costos y diseño de tableros ejecutivos bajo estándar visual.</td>
+                    </tr>
+                    <tr class="transition-colors hover:bg-surface-muted/60">
+                      <td class="px-6 py-4 font-bold text-content-title">Google Data Analytics</td>
+                      <td class="px-6 py-4 font-mono text-content-muted">Google (Credly)</td>
+                      <td class="px-6 py-4">Extracción y limpieza estructurada de datos masivos, análisis exploratorio de discrepancias y documentación técnica.</td>
+                    </tr>
+                    <tr class="transition-colors hover:bg-surface-muted/60">
+                      <td class="px-6 py-4 font-bold text-content-title">Google AI Essentials</td>
+                      <td class="px-6 py-4 font-mono text-content-muted">Google (Credly)</td>
+                      <td class="px-6 py-4">Aplicación de inteligencia artificial en automatización de tareas analíticas, síntesis de datos y optimización de flujos de trabajo.</td>
+                    </tr>
+                    <tr class="transition-colors hover:bg-surface-muted/60">
+                      <td class="px-6 py-4 font-bold text-content-title">Gestión Operativa de Bodega &amp; SAP</td>
+                      <td class="px-6 py-4 font-mono text-content-muted">Experiencia en Terreno</td>
+                      <td class="px-6 py-4">Control de entradas y salidas, trazabilidad física de existencias, conciliación de movimientos de almacén y detección de descalces frente a facturación.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================== TRAYECTORIA ===================== -->
+        <section id="trayectoria" class="border-b border-surface-border bg-surface-canvas py-20 sm:py-24">
+          <div class="mx-auto max-w-5xl px-5 sm:px-8">
+            <p class="font-mono text-[12px] font-semibold uppercase tracking-[0.2em] text-copper">— Trayectoria</p>
+            <h2 class="mt-3 text-3xl font-bold tracking-tight text-content-title sm:text-4xl">Experiencia profesional</h2>
+
+            <div id="timeline-container" class="mt-12 space-y-8 relative">
+              
+              <!-- Pista de Fondo -->
+              <div class="absolute top-2 bottom-6 left-[11px] sm:left-[15px] w-[2px] bg-slate-200/90 pointer-events-none rounded-full"></div>
+              
+              <!-- Barra de Relleno Activa con Desvanecimiento Suave -->
+              <div
+                id="timeline-bar"
+                class="timeline-gradient-bar absolute top-2 left-[11px] sm:left-[15px] w-[2px] rounded-full origin-top h-0 pointer-events-none transition-all duration-150 ease-out"
+              ></div>
+
+              <!-- Item 1: Consultor de Control Operacional & Auditoría de Datos -->
+              <div class="timeline-step relative pl-9 sm:pl-14">
+                <span class="timeline-dot absolute left-0.5 sm:left-1.5 top-2.5 h-4 w-4 rounded-full border-2 border-copper bg-white transition-all duration-300 z-10 shadow-sm flex items-center justify-center">
+                  <span class="timeline-inner h-1.5 w-1.5 rounded-full bg-copper transition-opacity duration-300 opacity-100"></span>
+                </span>
+                <div class="group rounded-xl border border-surface-border bg-surface-card p-6 sm:p-7 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-copper/60 hover:shadow-xl">
+                  <div class="flex flex-wrap items-center justify-between gap-1">
+                    <span class="font-mono text-xs font-bold text-copper">ABRIL 2026 – ACTUALIDAD</span>
+                    <span class="font-mono text-xs text-content-muted">Santiago, Chile</span>
+                  </div>
+                  <h3 class="mt-2 text-base sm:text-lg font-bold text-content-title">Consultor de Control Operacional &amp; Auditoría de Datos</h3>
+                  <p class="text-xs sm:text-sm text-content-muted font-medium">Práctica Profesional Independiente</p>
+                  
+                  <ul class="mt-4 space-y-3 text-xs sm:text-sm text-content-body leading-relaxed">
+                    <li class="flex items-start gap-2">
+                      <span class="text-copper mt-1">―</span>
+                      <div>
+                        <strong class="text-content-title font-semibold">Auditoría de Inventarios &amp; Modelado SQL/BI:</strong> Modelado relacional en T-SQL y Power BI para reconciliación transaccional MRO (3-Way Match), reduciendo tiempos de reportería y aislando sobrecostos frente a contrato marco.
+                      </div>
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <span class="text-copper mt-1">―</span>
+                      <div>
+                        <strong class="text-content-title font-semibold">Automatización de Flujos Logísticos (APIs / ETL):</strong> Implementación de pipelines para consolidar movimientos de almacén, eliminando tareas manuales y configurando alertas tempranas por descalce documental.
+                      </div>
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <span class="text-copper mt-1">―</span>
+                      <div>
+                        <strong class="text-content-title font-semibold">Control de Gestión Operativa:</strong> Tableros de visibilidad en terreno (OTIF, Lead Times, rotación de activos y días de inventario).
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Item 2: Analista de Datos Operacionales & Modelado Cuantitativo -->
+              <div class="timeline-step relative pl-9 sm:pl-14">
+                <span class="timeline-dot absolute left-0.5 sm:left-1.5 top-2.5 h-4 w-4 rounded-full border-2 border-slate-300 bg-white transition-all duration-300 z-10 shadow-sm flex items-center justify-center">
+                  <span class="timeline-inner h-1.5 w-1.5 rounded-full bg-copper transition-opacity duration-300 opacity-0"></span>
+                </span>
+                <div class="group rounded-xl border border-surface-border bg-surface-card p-6 sm:p-7 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-status-system/60 hover:shadow-xl">
+                  <div class="flex flex-wrap items-center justify-between gap-1">
+                    <span class="font-mono text-xs font-semibold text-content-muted">JUNIO 2021 – DICIEMBRE 2025</span>
+                    <span class="font-mono text-xs text-content-muted">Remoto</span>
+                  </div>
+                  <h3 class="mt-2 text-base sm:text-lg font-bold text-content-title">Analista de Datos Operacionales &amp; Modelado Cuantitativo</h3>
+                  <p class="text-xs sm:text-sm text-content-muted font-medium">Proyectos Independientes</p>
+                  
+                  <ul class="mt-4 space-y-3 text-xs sm:text-sm text-content-body leading-relaxed">
+                    <li class="flex items-start gap-2">
+                      <span class="text-content-dim mt-1">―</span>
+                      <div>
+                        <strong class="text-content-title font-semibold">Procesamiento de Datos Transaccionales:</strong> Extracción, depuración y normalización de volúmenes masivos de datos en SQL para detección de anomalías y duplicidades transaccionales.
+                      </div>
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <span class="text-content-dim mt-1">―</span>
+                      <div>
+                        <strong class="text-content-title font-semibold">Modelado Cuantitativo &amp; Series Temporales:</strong> Análisis estadístico de series temporales para identificar patrones de consumo, desvíos recurrentes y umbrales de capital inmovilizado.
+                      </div>
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <span class="text-content-dim mt-1">―</span>
+                      <div>
+                        <strong class="text-content-title font-semibold">Monitoreo Continuo:</strong> Creación de dashboards y alertas automáticas para supervisión de métricas operativas y límites de tolerancia.
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Item 3: Supervisor de Logística & Facturación -->
+              <div class="timeline-step relative pl-9 sm:pl-14">
+                <span class="timeline-dot absolute left-0.5 sm:left-1.5 top-2.5 h-4 w-4 rounded-full border-2 border-slate-300 bg-white transition-all duration-300 z-10 shadow-sm flex items-center justify-center">
+                  <span class="timeline-inner h-1.5 w-1.5 rounded-full bg-copper transition-opacity duration-300 opacity-0"></span>
+                </span>
+                <div class="group rounded-xl border border-surface-border bg-surface-card p-6 sm:p-7 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-status-reconciled/60 hover:shadow-xl">
+                  <div class="flex flex-wrap items-center justify-between gap-1">
+                    <span class="font-mono text-xs font-semibold text-content-muted">DICIEMBRE 2018 – MARZO 2021</span>
+                    <span class="font-mono text-xs text-content-muted">Santiago, Chile</span>
+                  </div>
+                  <h3 class="mt-2 text-base sm:text-lg font-bold text-content-title">Supervisor de Logística &amp; Facturación</h3>
+                  <p class="text-xs sm:text-sm text-content-muted font-medium">Antalis</p>
+                  
+                  <ul class="mt-4 space-y-3 text-xs sm:text-sm text-content-body leading-relaxed">
+                    <li class="flex items-start gap-2">
+                      <span class="text-content-dim mt-1">―</span>
+                      <div>
+                        <strong class="text-content-title font-semibold">Auditoría y Regularización de Facturación:</strong> Liderazgo en la depuración y cierre de procesos críticos de facturación pendiente y cuadraturas documentales en 3 CDs bajo SAP ERP/WMS, erradicando discrepancias entre flujo físico y contable.
+                      </div>
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <span class="text-content-dim mt-1">―</span>
+                      <div>
+                        <strong class="text-content-title font-semibold">Integración Tecnológica de Flota:</strong> Dirección técnica de la integración entre la plataforma de ruteo SimpleRoute y el ecosistema SAP ERP/WMS, optimizando tiempos de despacho y trazabilidad de flota (OTIF).
+                      </div>
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <span class="text-content-dim mt-1">―</span>
+                      <div>
+                        <strong class="text-content-title font-semibold">Control de Mermas &amp; Costos (CECO):</strong> Clasificación y control sistemático de devoluciones y reclamos para imputación directa por CECO a transportistas, logrando una exactitud de inventario superior al 98%.
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Item 4: Supervisor de Carga Pesada (Aluminio) & Operaciones -->
+              <div class="timeline-step relative pl-9 sm:pl-14">
+                <span class="timeline-dot absolute left-0.5 sm:left-1.5 top-2.5 h-4 w-4 rounded-full border-2 border-slate-300 bg-white transition-all duration-300 z-10 shadow-sm flex items-center justify-center">
+                  <span class="timeline-inner h-1.5 w-1.5 rounded-full bg-copper transition-opacity duration-300 opacity-0"></span>
+                </span>
+                <div class="group rounded-xl border border-surface-border bg-surface-card p-6 sm:p-7 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-copper/60 hover:shadow-xl">
+                  <div class="flex flex-wrap items-center justify-between gap-1">
+                    <span class="font-mono text-xs font-semibold text-content-muted">MAYO 2011 – ENERO 2017</span>
+                    <span class="font-mono text-xs text-content-muted">Ciudad Guayana, Venezuela</span>
+                  </div>
+                  <h3 class="mt-2 text-base sm:text-lg font-bold text-content-title">Supervisor de Carga Pesada (Aluminio) &amp; Operaciones</h3>
+                  <p class="text-xs sm:text-sm text-content-muted font-medium">Transporte de Carga Pesada Monte Sacro C.A.</p>
+                  
+                  <ul class="mt-4 space-y-3 text-xs sm:text-sm text-content-body leading-relaxed">
+                    <li class="flex items-start gap-2">
+                      <span class="text-content-dim mt-1">―</span>
+                      <div>
+                        <strong class="text-content-title font-semibold">Maniobras Críticas e Izaje:</strong> Liderazgo directo en terreno de operaciones de estiba, trincaje, carga y descarga de equipos pesados y componentes industriales para la industria pesada del aluminio con cero incidentes.
+                      </div>
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <span class="text-content-dim mt-1">―</span>
+                      <div>
+                        <strong class="text-content-title font-semibold">Gobernanza de Seguridad HSEC:</strong> Supervisión y aplicación rigurosa de protocolos de prevención de riesgos laborales, uso de EPP para faena pesada y permisos de trabajo seguro (AST/PTS).
+                      </div>
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <span class="text-content-dim mt-1">―</span>
+                      <div>
+                        <strong class="text-content-title font-semibold">Auditoría Documental, Báscula y ETA:</strong> Validación técnica de cubicación, pesaje en báscula, distribución de ejes y legalidad de guías de remisión; monitoreo continuo de tractocamiones y optimización de ventanas de llegada (ETA).
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+      <!-- ===================== FOOTER (CONTACTO OPTIMIZADO) ===================== -->
+      <footer id="contacto" class="bg-dark-deep py-20 sm:py-24 border-t border-dark-border/60 text-slate-300">
+        <div class="mx-auto max-w-5xl px-5 text-center sm:px-8">
+          <p class="font-mono text-[12px] font-semibold uppercase tracking-[0.25em] text-copper-soft">— INCORPORACIÓN PROFESIONAL</p>
+          <h2 class="mt-4 text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
+            ¿Discutimos cómo resolver los descalces entre bodega y facturación en tu equipo?
+          </h2>
+          <p class="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-400">
+            Disponible para incorporarme en roles de <strong>Analista de Inventarios &amp; MRO</strong>, <strong>Analista de Abastecimiento / Supply Chain</strong> o <strong>Control de Gestión Operacional</strong>. Abierto a faena o base central en Santiago.
+          </p>
+
+          <!-- Botones de Acción de Contacto -->
+          <div class="mt-10 flex flex-wrap justify-center gap-4 items-center">
+            
+            <!-- Botón Inteligente: Copia al Portapapeles con Fallback de Envío -->
+            <button
+              type="button"
+              id="copy-email-btn"
+              onclick="handleContactClick()"
+              class="relative inline-flex items-center gap-2.5 rounded-full bg-copper px-6 py-3 text-xs sm:text-sm font-semibold text-white transition-all duration-300 hover:bg-copper-hover hover:scale-[1.02] shadow-md shadow-copper/20"
+            >
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              <span id="btn-text">Iniciar conversación directa</span>
+            </button>
+
+            <a
+              href="https://www.linkedin.com/in/obedfermin/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-2 rounded-full border border-dark-border bg-dark-base px-6 py-3 text-xs sm:text-sm font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:border-copper hover:text-copper-soft hover:shadow-sm"
+            >
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.44-2.13 2.94v5.67H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></svg>
+              Conectar en LinkedIn
+            </a>
+            
+            <a
+              href="https://github.com/ObedFermin"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-2 rounded-full border border-dark-border bg-dark-base px-6 py-3 text-xs sm:text-sm font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:border-copper hover:text-copper-soft hover:shadow-sm"
+            >
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.25.45-2.28 1.19-3.08-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.08 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.06.78 2.14 0 1.55-.01 2.8-.01 3.18 0 .31.21.68.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5Z"/></svg>
+              Revisar código en GitHub
+            </a>
+          </div>
+
+          <!-- Correo visible y accesible en texto plano para evitar fricciones -->
+          <div class="mt-6 flex items-center justify-center gap-2 text-xs font-mono text-slate-400">
+            <span>O escribe directamente a:</span>
+            <span class="text-white font-semibold">Obedfermincl14@gmail.com</span>
+            <button
+              onclick="copyToClipboard('Obedfermincl14@gmail.com', this)"
+              class="ml-1 text-[11px] text-copper-soft underline hover:text-white transition-colors"
+              title="Copiar correo"
+            >
+              [Copiar]
+            </button>
+          </div>
+
+          <div class="mt-16 border-t border-dark-border/60 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-mono gap-4">
+            <p>© <span id="year">2026</span> Obed Fermín · Control de Inventarios, ERP &amp; Analítica de Datos</p>
+            <p class="text-slate-400">SAP MM/WM · SQL Server · Power BI</p>
+          </div>
+        </div>
+      </footer>
+
+    </div>
+
+    <!-- Scripts de Interacción -->
+    <script>
+      (function () {
+        var toggle = document.getElementById('menu-toggle')
+        var nav = document.getElementById('mobile-nav')
+        var iconMenu = document.getElementById('icon-menu')
+        var iconClose = document.getElementById('icon-close')
+
+        function setOpen(open) {
+          nav.classList.toggle('hidden', !open)
+          iconMenu.classList.toggle('hidden', open)
+          iconClose.classList.toggle('hidden', !open)
+          toggle.setAttribute('aria-expanded', String(open))
+        }
+
+        toggle.addEventListener('click', function () {
+          setOpen(nav.classList.contains('hidden'))
+        })
+
+        document.querySelectorAll('.mobile-link').forEach(function (link) {
+          link.addEventListener('click', function () {
+            setOpen(false)
+          })
+        })
+      })()
+
+      document.getElementById('year').textContent = new Date().getFullYear()
+
+      // Manejo inteligente del contacto: Copia correo y lanza mailto de forma no intrusiva
+      function handleContactClick() {
+        var email = 'Obedfermincl14@gmail.com'
+        var btnText = document.getElementById('btn-text')
+        
+        navigator.clipboard.writeText(email).then(function () {
+          btnText.textContent = '¡Correo copiado al portapapeles!'
+          setTimeout(function () {
+            window.location.href = 'mailto:' + email
+          }, 350)
+          setTimeout(function () {
+            btnText.textContent = 'Iniciar conversación directa'
+          }, 3500)
+        }).catch(function () {
+          window.location.href = 'mailto:' + email
+        })
+      }
+
+      function copyToClipboard(text, btn) {
+        navigator.clipboard.writeText(text).then(function () {
+          var original = btn.textContent
+          btn.textContent = '[¡Copiado!]'
+          setTimeout(function () {
+            btn.textContent = original
+          }, 2000)
+        })
+      }
+
+      // Animación suave de barra de tiempo
+      window.addEventListener('scroll', function () {
+        var container = document.getElementById('timeline-container')
+        var bar = document.getElementById('timeline-bar')
+        var dots = document.querySelectorAll('.timeline-dot')
+        if (!container || !bar) return
+
+        var rect = container.getBoundingClientRect()
+        var windowHeight = window.innerHeight
+        var triggerPoint = windowHeight * 0.60
+
+        var scrolled = triggerPoint - rect.top
+        var totalHeight = rect.height - 24
+
+        var progress = Math.min(Math.max(scrolled, 0), totalHeight)
+        bar.style.height = progress + 'px'
+
+        dots.forEach(function (dot) {
+          var dotRect = dot.getBoundingClientRect()
+          var inner = dot.querySelector('.timeline-inner')
+          if (dotRect.top <= triggerPoint) {
+            dot.classList.add('border-copper')
+            dot.classList.remove('border-slate-300')
+            if (inner) inner.classList.remove('opacity-0')
+          } else {
+            dot.classList.remove('border-copper')
+            dot.classList.add('border-slate-300')
+            if (inner) inner.classList.add('opacity-0')
+          }
+        })
+      }, { passive: true })
+    </script>
+  </body>
+</html>
