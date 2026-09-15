@@ -47,7 +47,7 @@
                 dim: '#94a3b8',
               },
               copper: {
-                DEFAULT: '#d97706', // Cobre calibrado (menos estridente, más sofisticado)
+                DEFAULT: '#d97706',
                 hover: '#b45309',
                 soft: '#f59e0b',
                 subtle: '#fffbeb',
@@ -118,7 +118,7 @@
       
       <!-- ===================== NAVBAR ===================== -->
       <div class="fixed top-4 inset-x-0 z-50 flex justify-center px-4">
-        <header class="w-full max-w-5xl rounded-full border border-dark-border/80 bg-dark-base/90 px-4 py-2.5 shadow-xl backdrop-blur-xl sm:px-6">
+        <header id="main-header" class="w-full max-w-5xl rounded-full border border-dark-border/80 bg-dark-base px-4 py-2.5 shadow-2xl backdrop-blur-xl transition-all duration-200 sm:px-6">
           <div class="flex items-center justify-between">
             <a href="#top" class="flex items-center gap-2.5 font-mono text-[13px] font-semibold tracking-tight transition-opacity hover:opacity-80">
               <span class="inline-block h-2.5 w-2.5 rounded-full bg-copper shadow-sm shadow-copper/60" aria-hidden="true"></span>
@@ -132,7 +132,7 @@
               <a href="#trayectoria" class="text-[13px] font-medium text-slate-300 transition-colors hover:text-white">Trayectoria</a>
             </nav>
 
-            <div class="flex items-center gap-5">
+            <div class="flex items-center gap-4">
               <a
                 href="https://github.com/ObedFermin/MiningMRO_Engine"
                 target="_blank"
@@ -151,7 +151,7 @@
               <button
                 type="button"
                 id="menu-toggle"
-                class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-dark-border text-slate-300 md:hidden"
+                class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-dark-border bg-dark-card text-slate-200 transition-colors hover:text-white md:hidden"
                 aria-label="Abrir menú"
               >
                 <svg id="icon-menu" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
@@ -160,13 +160,13 @@
             </div>
           </div>
 
-          <!-- Menú Móvil -->
-          <nav id="mobile-nav" class="hidden border-t border-dark-border/70 pt-4 mt-3 md:hidden">
-            <ul class="flex flex-col gap-2">
-              <li><a href="#posicionamiento" class="mobile-link block rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-dark-card hover:text-white">Perfil</a></li>
-              <li><a href="#caso-estudio" class="mobile-link block rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-dark-card hover:text-white">Caso de Estudio</a></li>
-              <li><a href="#credenciales" class="mobile-link block rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-dark-card hover:text-white">Credenciales</a></li>
-              <li><a href="#trayectoria" class="mobile-link block rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-dark-card hover:text-white">Trayectoria</a></li>
+          <!-- Menú Móvil Limpio -->
+          <nav id="mobile-nav" class="hidden border-t border-dark-border/80 pt-3 pb-1 mt-3 md:hidden">
+            <ul class="flex flex-col gap-1 text-center sm:text-left">
+              <li><a href="#posicionamiento" class="mobile-link block rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-dark-card hover:text-white">Perfil</a></li>
+              <li><a href="#caso-estudio" class="mobile-link block rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-dark-card hover:text-white">Caso de Estudio</a></li>
+              <li><a href="#credenciales" class="mobile-link block rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-dark-card hover:text-white">Credenciales</a></li>
+              <li><a href="#trayectoria" class="mobile-link block rounded-xl px-4 py-2.5 text-sm font-medium text-slate-200 hover:bg-dark-card hover:text-white">Trayectoria</a></li>
             </ul>
           </nav>
         </header>
@@ -858,7 +858,21 @@
             </button>
           </div>
 
-          <div class="mt-16 border-t border-dark-border/60 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-mono gap-4">
+          <!-- CONTADOR DE VISITAS DISCRETO Y ARMONIOSO -->
+          <div class="mt-12 flex justify-center">
+            <div class="inline-flex items-center gap-2 rounded-full border border-dark-border bg-dark-base/80 px-3.5 py-1.5 font-mono text-[11px] text-slate-400 backdrop-blur-sm">
+              <span class="h-1.5 w-1.5 rounded-full bg-status-reconciled animate-pulse" aria-hidden="true"></span>
+              <span>Visitas al portafolio:</span>
+              <img
+                src="https://hits.sh/obedfermin.github.io.svg?label=&amp;color=d97706&amp;title=Visitas"
+                alt="Contador de accesos"
+                class="inline-block h-4 object-contain"
+                loading="lazy"
+              />
+            </div>
+          </div>
+
+          <div class="mt-8 border-t border-dark-border/60 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 font-mono gap-4">
             <p>© <span id="year">2026</span> Obed Fermín · Control de Inventarios, ERP &amp; Analítica de Datos</p>
             <p class="text-slate-400">SAP MM/WM · SQL Server · Power BI</p>
           </div>
@@ -870,6 +884,7 @@
     <!-- Scripts de Interacción -->
     <script>
       (function () {
+        var header = document.getElementById('main-header')
         var toggle = document.getElementById('menu-toggle')
         var nav = document.getElementById('mobile-nav')
         var iconMenu = document.getElementById('icon-menu')
@@ -880,6 +895,15 @@
           iconMenu.classList.toggle('hidden', open)
           iconClose.classList.toggle('hidden', !open)
           toggle.setAttribute('aria-expanded', String(open))
+
+          // Evita que el contenedor recorte el menú en forma de huevo
+          if (open) {
+            header.classList.remove('rounded-full')
+            header.classList.add('rounded-2xl')
+          } else {
+            header.classList.remove('rounded-2xl')
+            header.classList.add('rounded-full')
+          }
         }
 
         toggle.addEventListener('click', function () {
