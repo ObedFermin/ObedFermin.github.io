@@ -38,11 +38,11 @@
                 border: '#2c3b52',
               },
               surface: {
-                canvas: '#f8fafc',
-                card: '#ffffff',
-                border: '#e2e8f0',
-                borderSoft: '#f1f5f9',
-                muted: '#f1f5f9',
+                canvas: '#edf1f5',
+                card: '#f8fafc',
+                border: '#d8e0e8',
+                borderSoft: '#e5eaf0',
+                muted: '#e6ebf1',
               },
               content: {
                 title: '#0f172a',
@@ -82,7 +82,7 @@
       @layer base {
         html { scroll-padding-top: 6rem; }
         body {
-          background-color: #f8fafc;
+          background-color: #edf1f5;
           color: #334155;
           font-feature-settings: "cv11", "ss01";
         }
@@ -116,6 +116,20 @@
             rgba(245, 158, 11, 0.2) 100%
           );
           box-shadow: 0 0 10px rgba(217, 119, 6, 0.3);
+        }
+
+        /* Puente cromático entre la franja oscura y el contenido claro. */
+        .hero-content-transition {
+          height: clamp(4.5rem, 9vw, 7rem);
+          background: linear-gradient(
+            180deg,
+            #17202e 0%,
+            #202b3b 22%,
+            #334155 45%,
+            #64748b 63%,
+            #d8e0e8 84%,
+            #edf1f5 100%
+          );
         }
       }
     </style>
@@ -154,7 +168,7 @@
               </a>
               <a
                 href="#contacto"
-                class="rounded-full bg-white px-4 py-1.5 text-xs font-semibold text-dark-deep transition-all hover:bg-slate-100 shadow-sm"
+                class="rounded-full bg-surface-card px-4 py-1.5 text-xs font-semibold text-dark-deep transition-all hover:bg-slate-100 shadow-sm"
               >
                 Contacto
               </a>
@@ -192,7 +206,7 @@
 
         <div class="relative mx-auto max-w-5xl px-5 sm:px-8">
           <p class="font-mono text-[12px] font-semibold uppercase tracking-[0.25em] text-copper-soft">
-            — INGENIERÍA INDUSTRIAL · CONTROL INTERNO · AUDITORÍA OPERACIONAL · SUPPLY CHAIN
+            — INGENIERÍA INDUSTRIAL · LOGÍSTICA · SUPPLY CHAIN
           </p>
 
           <h1 class="mt-6 text-balance text-4xl font-extrabold leading-[1.12] tracking-tight text-white sm:text-5xl lg:text-6xl">
@@ -221,15 +235,26 @@
             </a>
           </div>
 
-          <div class="mt-14 flex flex-wrap items-center gap-y-2 gap-x-6 text-xs text-slate-400 font-mono border-t border-dark-border/60 pt-6">
-            <span class="flex items-center gap-2 text-slate-300">
-              <span class="h-2 w-2 rounded-full bg-status-reconciled"></span>
-              Santiago, Chile
-            </span>
-            <span>· Control Interno, Procesos &amp; Logística</span>
-            <span>· Trazabilidad físico vs. sistema</span>
-            <span>· Conciliación con evidencia y datos</span>
-          </div>
+<div class="mt-14 flex flex-wrap items-center gap-y-3 gap-x-6
+            border-t border-dark-border/60 pt-6
+            font-mono text-xs text-slate-300">
+
+  <span class="flex items-center gap-2">
+    <span class="h-1.5 w-1.5 rounded-full bg-copper"></span>
+    Trazabilidad físico–sistema
+  </span>
+
+  <span class="flex items-center gap-2">
+    <span class="h-1.5 w-1.5 rounded-full bg-copper"></span>
+    Conciliación transaccional
+  </span>
+
+  <span class="flex items-center gap-2">
+    <span class="h-1.5 w-1.5 rounded-full bg-copper"></span>
+    Excepciones respaldadas con evidencia
+  </span>
+
+</div>
 
           <div class="mt-8 flex justify-center">
             <a href="#posicionamiento" class="inline-flex items-center gap-2 text-[11px] font-mono uppercase tracking-widest text-slate-400 hover:text-copper-soft transition-colors">
@@ -265,6 +290,9 @@
           </div>
         </div>
       </div>
+
+      <!-- ===================== TRANSICIÓN HERO / CONTENIDO ===================== -->
+      <div class="hero-content-transition" aria-hidden="true"></div>
 
       <main class="bg-surface-canvas">
         
@@ -500,7 +528,7 @@
                       href="https://github.com/ObedFermin/MiningMRO_Engine"
                       target="_blank"
                       rel="noopener noreferrer"
-                      class="inline-flex items-center gap-1.5 rounded-lg border border-surface-border bg-surface-muted px-3.5 py-2 text-xs font-semibold text-content-title transition-all hover:border-copper hover:bg-white hover:text-copper shadow-sm"
+                      class="inline-flex items-center gap-1.5 rounded-lg border border-surface-border bg-surface-muted px-3.5 py-2 text-xs font-semibold text-content-title transition-all hover:border-copper hover:bg-surface-card hover:text-copper shadow-sm"
                     >
                       <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.25.45-2.28 1.19-3.08-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.08 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.06.78 2.14 0 1.55-.01 2.8-.01 3.18 0 .31.21.68.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5Z"/></svg>
                       Ver Repositorio &amp; Código T-SQL ↗
@@ -520,7 +548,7 @@
               </div>
 
               <!-- Banner de Precisión SAP MARD -->
-              <div class="lg:col-span-12 rounded-xl border border-surface-border bg-white p-5 shadow-sm mt-4">
+              <div class="lg:col-span-12 rounded-xl border border-surface-border bg-surface-card p-5 shadow-sm mt-4">
                 <div class="font-mono text-[11px] font-bold uppercase tracking-wider text-copper">Precisión de inventario SAP</div>
                 <p class="mt-2 text-xs sm:text-sm leading-relaxed text-content-body">
                   En <code class="font-mono text-copper font-semibold">MARD</code>, <code class="font-mono text-copper font-semibold">SPEME</code> corresponde a stock bloqueado y <code class="font-mono text-copper font-semibold">INSME</code> a stock en inspección de calidad. Son estados de inventario distintos y deben reportarse por separado. <code class="font-mono text-copper font-semibold">MARD</code> entrega cantidades físicas por almacén: la valorización monetaria requiere explicitar la fuente de precio, moneda, unidad y fecha de referencia; no debe presentarse como valor contable directo obtenido únicamente desde MARD.
@@ -545,13 +573,13 @@
                 <span class="font-mono text-[11px] font-semibold uppercase tracking-wider text-copper">01 / PROCESOS END-TO-END &amp; ERP</span>
                 <h3 class="mt-2 text-base font-bold text-content-title">Control de Procesos &amp; Gestión en Bodega</h3>
                 <div class="mt-5 flex flex-wrap gap-2.5">
-                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-white hover:text-content-title">Control de Procesos End-to-End</span>
-                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-white hover:text-content-title">SAP ERP (MM / WMS)</span>
-                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-white hover:text-content-title">Transacciones WMS (LS24, Tipo 904)</span>
-                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-white hover:text-content-title">Recepción, Almacenamiento &amp; Despacho</span>
-                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-white hover:text-content-title">Trazabilidad Físico vs. Sistema</span>
-                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-white hover:text-content-title">Inventarios Cíclicos &amp; Exactitud</span>
-                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-white hover:text-content-title">Stock bloqueado (SPEME) / inspección (INSME)</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-surface-card hover:text-content-title">Control de Procesos End-to-End</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-surface-card hover:text-content-title">SAP ERP (MM / WMS)</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-surface-card hover:text-content-title">Transacciones WMS (LS24, Tipo 904)</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-surface-card hover:text-content-title">Recepción, Almacenamiento &amp; Despacho</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-surface-card hover:text-content-title">Trazabilidad Físico vs. Sistema</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-surface-card hover:text-content-title">Inventarios Cíclicos &amp; Exactitud</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-surface-card hover:text-content-title">Stock bloqueado (SPEME) / inspección (INSME)</span>
                 </div>
               </div>
 
@@ -560,12 +588,12 @@
                 <span class="font-mono text-[11px] font-semibold uppercase tracking-wider text-status-system">02 / AUDITORÍA DE DATOS &amp; SQL</span>
                 <h3 class="mt-2 text-base font-bold text-content-title">Consultas T-SQL &amp; Arquitectura Relacional</h3>
                 <div class="mt-5 flex flex-wrap gap-2.5">
-                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-system/60 hover:bg-white hover:text-content-title">SQL Server (SSMS)</span>
-                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-system/60 hover:bg-white hover:text-content-title">Transact-SQL (T-SQL)</span>
-                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-system/60 hover:bg-white hover:text-content-title">Consultas BigQuery (GoogleSQL)</span>
-                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-system/60 hover:bg-white hover:text-content-title">Modelado relacional, DDL y CTEs</span>
-                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-system/60 hover:bg-white hover:text-content-title">Neteo Debe/Haber (shkzg)</span>
-                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-system/60 hover:bg-white hover:text-content-title">Test Harness Unitario &amp; Data Quality</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-system/60 hover:bg-surface-card hover:text-content-title">SQL Server (SSMS)</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-system/60 hover:bg-surface-card hover:text-content-title">Transact-SQL (T-SQL)</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-system/60 hover:bg-surface-card hover:text-content-title">Consultas BigQuery (GoogleSQL)</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-system/60 hover:bg-surface-card hover:text-content-title">Modelado relacional, DDL y CTEs</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-system/60 hover:bg-surface-card hover:text-content-title">Neteo Debe/Haber (shkzg)</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-system/60 hover:bg-surface-card hover:text-content-title">Test Harness Unitario &amp; Data Quality</span>
                 </div>
               </div>
 
@@ -574,12 +602,12 @@
                 <span class="font-mono text-[11px] font-semibold uppercase tracking-wider text-status-reconciled">03 / BUSINESS INTELLIGENCE</span>
                 <h3 class="mt-2 text-base font-bold text-content-title">Reportería Operativa &amp; Tableros de Control</h3>
                 <div class="mt-5 flex flex-wrap gap-2.5">
-                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-reconciled/60 hover:bg-white hover:text-content-title">Power BI Desktop</span>
-                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-reconciled/60 hover:bg-white hover:text-content-title">Modelado Estrella Dimensional</span>
-                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-reconciled/60 hover:bg-white hover:text-content-title">Métricas DAX para Control Operativo</span>
-                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-reconciled/60 hover:bg-white hover:text-content-title">Estándar Visual IBCS</span>
-                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-reconciled/60 hover:bg-white hover:text-content-title">Control de Lead Times &amp; OTIF</span>
-                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-reconciled/60 hover:bg-white hover:text-content-title">Monitoreo de Desvíos Presupuestarios</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-reconciled/60 hover:bg-surface-card hover:text-content-title">Power BI Desktop</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-reconciled/60 hover:bg-surface-card hover:text-content-title">Modelado Estrella Dimensional</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-reconciled/60 hover:bg-surface-card hover:text-content-title">Métricas DAX para Control Operativo</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-reconciled/60 hover:bg-surface-card hover:text-content-title">Estándar Visual IBCS</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-reconciled/60 hover:bg-surface-card hover:text-content-title">Control de Lead Times &amp; OTIF</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-status-reconciled/60 hover:bg-surface-card hover:text-content-title">Monitoreo de Desvíos Presupuestarios</span>
                 </div>
               </div>
 
@@ -588,12 +616,12 @@
                 <span class="font-mono text-[11px] font-semibold uppercase tracking-wider text-copper">04 / CONTROL INTERNO &amp; AUDITORÍA</span>
                 <h3 class="mt-2 text-base font-bold text-content-title">Auditoría Operativa &amp; Mitigación de Riesgos</h3>
                 <div class="mt-5 flex flex-wrap gap-2.5">
-                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-white hover:text-content-title">Conciliación 3-Way Match</span>
-                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-white hover:text-content-title">Logística Inversa (Devoluciones ZDDF)</span>
-                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-white hover:text-content-title">Imputación de Mermas por CECO</span>
-                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-white hover:text-content-title">Auditoría Documental de Despacho</span>
-                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-white hover:text-content-title">Validación de Guías &amp; Facturación</span>
-                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-white hover:text-content-title">Ruteo Digital (SimpliRoute)</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-surface-card hover:text-content-title">Conciliación 3-Way Match</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-surface-card hover:text-content-title">Logística Inversa (Devoluciones ZDDF)</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-surface-card hover:text-content-title">Imputación de Mermas por CECO</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-surface-card hover:text-content-title">Auditoría Documental de Despacho</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-surface-card hover:text-content-title">Validación de Guías &amp; Facturación</span>
+                  <span class="rounded-md border border-surface-border bg-surface-muted px-3 py-1.5 text-xs text-content-body transition-all duration-200 hover:-translate-y-0.5 hover:border-copper/60 hover:bg-surface-card hover:text-content-title">Ruteo Digital (SimpliRoute)</span>
                 </div>
               </div>
 
@@ -611,21 +639,21 @@
             </p>
 
             <div class="mt-10 grid grid-cols-1 gap-5 md:grid-cols-3">
-              <article class="rounded-2xl border border-surface-border bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-copper/50 hover:shadow-lg">
+              <article class="rounded-2xl border border-surface-border bg-surface-card p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-copper/50 hover:shadow-lg">
                 <span class="font-mono text-[11px] font-semibold uppercase tracking-wider text-copper">01 / MINERÍA</span>
                 <h3 class="mt-3 text-lg font-bold text-content-title">Abastecimiento MRO e inventario crítico</h3>
                 <p class="mt-3 text-sm leading-relaxed text-content-muted">Conciliación OC–recepción–factura, revisión de precios frente a acuerdos aplicables, seguimiento de stock bloqueado y priorización de repuestos críticos.</p>
                 <p class="mt-4 border-t border-surface-border pt-3 text-xs font-medium text-content-body">Proyecto demostrativo: Mining MRO Analytics Platform.</p>
               </article>
 
-              <article class="rounded-2xl border border-surface-border bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-copper/50 hover:shadow-lg">
+              <article class="rounded-2xl border border-surface-border bg-surface-card p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-copper/50 hover:shadow-lg">
                 <span class="font-mono text-[11px] font-semibold uppercase tracking-wider text-copper">02 / ENERGÍA Y COMBUSTIBLES</span>
                 <h3 class="mt-3 text-lg font-bold text-content-title">Trazabilidad y control patrimonial</h3>
                 <p class="mt-3 text-sm leading-relaxed text-content-muted">Conciliación de movimientos y documentos, control de existencias y estados de stock, revisión de diferencias y análisis de costos operacionales con evidencia trazable.</p>
                 <p class="mt-4 border-t border-surface-border pt-3 text-xs font-medium text-content-body">Capacidades transferibles; no se presenta como experiencia sectorial directa.</p>
               </article>
 
-              <article class="rounded-2xl border border-surface-border bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-copper/50 hover:shadow-lg">
+              <article class="rounded-2xl border border-surface-border bg-surface-card p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-copper/50 hover:shadow-lg">
                 <span class="font-mono text-[11px] font-semibold uppercase tracking-wider text-copper">03 / RETAIL Y DISTRIBUCIÓN</span>
                 <h3 class="mt-3 text-lg font-bold text-content-title">Exactitud de inventario y ejecución logística</h3>
                 <p class="mt-3 text-sm leading-relaxed text-content-muted">Trazabilidad físico–sistema, inventarios cíclicos, logística inversa, devoluciones, mermas por CECO, validación documental y cumplimiento de despacho.</p>
@@ -658,7 +686,7 @@
               <!-- Tarjeta 1: SAP Ariba Transaction Data Integration -->
               <div class="group flex flex-col justify-between rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-copper/60 hover:shadow-xl">
                 <div>
-                  <div class="flex h-40 items-center justify-center rounded-xl bg-white p-4 transition-transform duration-300 group-hover:scale-105 border border-surface-border/60 shadow-sm">
+                  <div class="flex h-40 items-center justify-center rounded-xl bg-surface-card p-4 transition-transform duration-300 group-hover:scale-105 border border-surface-border/60 shadow-sm">
                     <img
                       src="assets/img/sap-badge-ariba.png"
                       alt="SAP Ariba Procurement Transaction Data Integration Badge"
@@ -682,7 +710,7 @@
               <!-- Tarjeta 2: SAP Master Data Integration -->
               <div class="group flex flex-col justify-between rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-copper/60 hover:shadow-xl">
                 <div>
-                  <div class="flex h-40 items-center justify-center rounded-xl bg-white p-4 transition-transform duration-300 group-hover:scale-105 border border-surface-border/60 shadow-sm">
+                  <div class="flex h-40 items-center justify-center rounded-xl bg-surface-card p-4 transition-transform duration-300 group-hover:scale-105 border border-surface-border/60 shadow-sm">
                     <img
                       src="assets/img/sap-badge-masterdata.png"
                       alt="Common Configurations for Master Data Integration Badge"
@@ -706,7 +734,7 @@
               <!-- Tarjeta 3: Google BI -->
               <div class="group flex flex-col justify-between rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-copper/60 hover:shadow-xl">
                 <div>
-                  <div class="flex h-40 items-center justify-center rounded-xl bg-white p-4 transition-transform duration-300 group-hover:scale-105 border border-surface-border/60 shadow-sm">
+                  <div class="flex h-40 items-center justify-center rounded-xl bg-surface-card p-4 transition-transform duration-300 group-hover:scale-105 border border-surface-border/60 shadow-sm">
                     <img
                       src="assets/img/Google Business Intelligence Professional Certificate.png"
                       alt="Google Business Intelligence Professional Certificate Badge"
@@ -730,7 +758,7 @@
               <!-- Tarjeta 4: Google Data Analytics -->
               <div class="group flex flex-col justify-between rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-copper/60 hover:shadow-xl">
                 <div>
-                  <div class="flex h-40 items-center justify-center rounded-xl bg-white p-4 transition-transform duration-300 group-hover:scale-105 border border-surface-border/60 shadow-sm">
+                  <div class="flex h-40 items-center justify-center rounded-xl bg-surface-card p-4 transition-transform duration-300 group-hover:scale-105 border border-surface-border/60 shadow-sm">
                     <img
                       src="assets/img/Google Data Analytics Professional Certificate.png"
                       alt="Google Data Analytics Professional Certificate Badge"
@@ -754,7 +782,7 @@
               <!-- Tarjeta 5: Google Project Management -->
               <div class="group flex flex-col justify-between rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-copper/60 hover:shadow-xl">
                 <div>
-                  <div class="flex h-40 items-center justify-center rounded-xl bg-white p-4 transition-transform duration-300 group-hover:scale-105 border border-surface-border/60 shadow-sm">
+                  <div class="flex h-40 items-center justify-center rounded-xl bg-surface-card p-4 transition-transform duration-300 group-hover:scale-105 border border-surface-border/60 shadow-sm">
                     <img
                       src="assets/img/Google Project Management Professional Certificate.png"
                       alt="Google Project Management Professional Certificate Badge"
@@ -778,7 +806,7 @@
               <!-- Tarjeta 6: Google AI Essentials -->
               <div class="group flex flex-col justify-between rounded-xl border border-surface-border bg-surface-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-copper/60 hover:shadow-xl">
                 <div>
-                  <div class="flex h-40 items-center justify-center rounded-xl bg-white p-4 transition-transform duration-300 group-hover:scale-105 border border-surface-border/60 shadow-sm">
+                  <div class="flex h-40 items-center justify-center rounded-xl bg-surface-card p-4 transition-transform duration-300 group-hover:scale-105 border border-surface-border/60 shadow-sm">
                     <img
                       src="assets/img/Google AI Essentials.png"
                       alt="Google AI Essentials Badge"
@@ -873,7 +901,7 @@
 
               <!-- Item 1: Consultor de Optimización Operacional y Transformación Digital -->
               <div class="timeline-step relative pl-9 sm:pl-14">
-                <span class="timeline-dot absolute left-0.5 sm:left-1.5 top-2.5 h-4 w-4 rounded-full border-2 border-copper bg-white transition-all duration-300 z-10 shadow-sm flex items-center justify-center">
+                <span class="timeline-dot absolute left-0.5 sm:left-1.5 top-2.5 h-4 w-4 rounded-full border-2 border-copper bg-surface-card transition-all duration-300 z-10 shadow-sm flex items-center justify-center">
                   <span class="timeline-inner h-1.5 w-1.5 rounded-full bg-copper transition-opacity duration-300 opacity-100"></span>
                 </span>
                 <div class="group rounded-xl border border-surface-border bg-surface-card p-6 sm:p-7 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-copper/60 hover:shadow-xl">
@@ -909,7 +937,7 @@
 
               <!-- Item 2: Analista de Control Transaccional, Datos y Riesgo Operativo -->
               <div class="timeline-step relative pl-9 sm:pl-14">
-                <span class="timeline-dot absolute left-0.5 sm:left-1.5 top-2.5 h-4 w-4 rounded-full border-2 border-slate-300 bg-white transition-all duration-300 z-10 shadow-sm flex items-center justify-center">
+                <span class="timeline-dot absolute left-0.5 sm:left-1.5 top-2.5 h-4 w-4 rounded-full border-2 border-slate-300 bg-surface-card transition-all duration-300 z-10 shadow-sm flex items-center justify-center">
                   <span class="timeline-inner h-1.5 w-1.5 rounded-full bg-copper transition-opacity duration-300 opacity-0"></span>
                 </span>
                 <div class="group rounded-xl border border-surface-border bg-surface-card p-6 sm:p-7 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-status-system/60 hover:shadow-xl">
@@ -945,7 +973,7 @@
 
               <!-- Item 3: Supervisor de Logística & Facturación (Antalis) -->
               <div class="timeline-step relative pl-9 sm:pl-14">
-                <span class="timeline-dot absolute left-0.5 sm:left-1.5 top-2.5 h-4 w-4 rounded-full border-2 border-slate-300 bg-white transition-all duration-300 z-10 shadow-sm flex items-center justify-center">
+                <span class="timeline-dot absolute left-0.5 sm:left-1.5 top-2.5 h-4 w-4 rounded-full border-2 border-slate-300 bg-surface-card transition-all duration-300 z-10 shadow-sm flex items-center justify-center">
                   <span class="timeline-inner h-1.5 w-1.5 rounded-full bg-copper transition-opacity duration-300 opacity-0"></span>
                 </span>
                 <div class="group rounded-xl border border-surface-border bg-surface-card p-6 sm:p-7 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-status-reconciled/60 hover:shadow-xl">
@@ -981,7 +1009,7 @@
 
               <!-- Item 4: Supervisor de Operaciones & Despacho Pesado -->
               <div class="timeline-step relative pl-9 sm:pl-14">
-                <span class="timeline-dot absolute left-0.5 sm:left-1.5 top-2.5 h-4 w-4 rounded-full border-2 border-slate-300 bg-white transition-all duration-300 z-10 shadow-sm flex items-center justify-center">
+                <span class="timeline-dot absolute left-0.5 sm:left-1.5 top-2.5 h-4 w-4 rounded-full border-2 border-slate-300 bg-surface-card transition-all duration-300 z-10 shadow-sm flex items-center justify-center">
                   <span class="timeline-inner h-1.5 w-1.5 rounded-full bg-copper transition-opacity duration-300 opacity-0"></span>
                 </span>
                 <div class="group rounded-xl border border-surface-border bg-surface-card p-6 sm:p-7 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-copper/60 hover:shadow-xl">
@@ -1185,3 +1213,4 @@
     </script>
   </body>
 </html>
+
